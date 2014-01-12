@@ -95,7 +95,7 @@ define([
         
 
         
-    
+      $('#files').val("");
       } else {
         alert('The File APIs are not fully supported in this browser.');
       }
@@ -121,10 +121,11 @@ define([
           console.log(text);
           self.model.ruleName=text;
           self.model.ruleSetName=text;
-          self.$el.find('#sendRuleInput').attr('placeholder',text);
+          //self.$el.find('#sendRuleInput').attr('placeholder',text);
           var xml = self.model.makeXML();
           self.model.saveToDisk(xml.flush());
           self.model.closeXW(xml);
+          self.model.changeStudyR();//change
 
         }
 
@@ -135,15 +136,16 @@ define([
 
       var modalr =this.$el.find('#Mymodal2');
       //console.log(modalr);
-      $(modalr).modal('hide');
-      var rulename = this.$el.find('#sendRuleInput');
-      var fileName = $(rulename).val();
-      var xml = this.model.makeXML();
-      //this.model.sendToServer(xml.flush(),'C:\\Program Files',fileName);
-      this.passtoParentWindow(xml,fileName);
-      this.model.closeXW(xml);
+      if ( $(modalr).find('#sendRuleInput').val() ){
+        $(modalr).modal('hide');
+        var rulename = this.$el.find('#sendRuleInput');
+        var fileName = $(rulename).val();
+        var xml = this.model.makeXML();
+        //this.model.sendToServer(xml.flush(),'C:\\Program Files',fileName);
+        this.passtoParentWindow(xml,fileName);
+        this.model.closeXW(xml);
 
-
+      }
 
     },
 
@@ -174,10 +176,11 @@ define([
 
     passtoParentWindow:function(xml,name){
 
-      var id='restrictions';
+      var id='restrictionshide';
       var summeryValue = this.$el.find('#summery').text();
       window.opener.$("#rulename").val(name);
-      window.opener.$("#" + id).html(summeryValue);
+      window.opener.$("#" + id).val(summeryValue);
+      window.opener.$('#restrictions').html(summeryValue);
       window.opener.$("#hide").val(xml.flush());
 
       window.close();
