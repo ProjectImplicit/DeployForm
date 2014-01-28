@@ -121,7 +121,7 @@ define([
           console.log(text);
           self.model.ruleName=text;
           self.model.ruleSetName=text;
-          //self.$el.find('#sendRuleInput').attr('placeholder',text);
+          self.$el.find('#sendRuleInput').attr('placeholder',text);
           var xml = self.model.makeXML();
           self.model.saveToDisk(xml.flush());
           self.model.closeXW(xml);
