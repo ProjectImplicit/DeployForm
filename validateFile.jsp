@@ -18,24 +18,63 @@
       #result{
 
         padding:30px;
-        font: normal 12px courier !important;
+        font: normal 14px courier !important;
 
       }
 
       
       </style>
+      
       <script src="jshint.js"></script>
       <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
       <script>
+
+      function parseline(str,a,b,c,d){
+        var res = str.replace('{a}',a);
+        res = res.replace('{b}',b);
+        res = res.replace('{c}',c);
+        res = res.replace('{d}',d);
+
+        return res;
+
+
+      }
 
         $(document).ready( function(){
           var path = $('#debug').val();
           console.log(path);
           var cont = $('#rulename').val();
+          console.log(cont);
+
           JSHINT(cont);
           var res = JSON.stringify(JSHINT.errors, null, 2);
-          console.log(res);
-          $('#result').text(res);
+          if (JSHINT.errors.length==0){
+            $('#result').html('No Errors were Found');
+            return;
+
+          }
+          for (var i=0;i<JSHINT.errors.length;i++){
+
+            console.log(JSHINT.errors[i]);
+            var obj = JSHINT.errors[i];
+            var a = obj.a;
+            var b = obj.b;
+            var c = obj.c;            
+            var d = obj.d;            
+            var objerr = obj.id;
+            var rawobj = obj.raw;
+            var rawS = parseline(rawobj,a,b,c,d);
+            var line = obj.line;
+            var char = obj.character;
+            var error = 'Error: '+objerr+'     '+'Description: '+rawS+'     '+'line: '+line+'     '+'charecter: '+char;
+            //var error = JSON.stringify(obj, null, 2);
+            var html = $('#result').html() + '<br/>'+ error;
+            $('#result').html(html);
+
+
+
+          }
+          
 
 
       
@@ -77,7 +116,7 @@
         
        
 			
-	 	    <input type="hidden" id="rulename" name="Language" value="<%=content%>">  
+	 	    <textarea id="rulename" style="display:none;" name="Language"><%=content%></textarea>
         <input type="hidden" id="debug" name="Language" value="<%=path%>">  
         <div id="resultdiv" style="">
         </br>

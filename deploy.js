@@ -294,70 +294,97 @@ function processForm(){
     var url="/implicit/rules";//for local
     var msgurl = "/ruleGenerator/msg.html";//for local
     //var msgurl = "/implicit/user/bgoldenberg/ruleGenerator/msg.html";//on implicit
-	var text = getFile();
+	
 	var xml = $('#hide' ).val();
 	var name = $('#researchName').val();
-	var ruleName = $('#rulename').val();
+	//var ruleName = $('#rulename').val();
 	var path = $('#folder').val();
-	
+	var index = path.lastIndexOf("/") + 1;
+    var length = path.length;
+    var filename = path.substr(index,length);
+    var ruleName = filename+'.rule';
+    $('#rulename').val(ruleName);
+	var text = getFile();
 	if (xml!='parent'){
-		sendToServer(xml,path,ruleName,url,msg2);
+		sendToServer(xml,path,ruleName,url,msg2,'false');
 	}
+	if (msg2.success===false && msg2.text==='File was not saved, a file with this name already exist on the server.'){
+ 		$('#ruleModel').modal('show');
+ 		$('#overwriteB').on('click',function(){
+ 			//alert('click');
+ 			$('#ruleModel').modal('hide');
+ 			sendToServer(xml,path,ruleName,url,msg2,'true');
+ 			if (msg2.success!=false){
+ 				sendFormToServer(name,text,msg1,url);
+ 				window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
+ 			}
+ 			
 
-	if (msg2.success!=false){
-
-		var timeStamp = Math.round(+new Date()/1000); 
-		var data={};
-	        //data.path='/user/'+'bgoldenberg';
-	        data.path='/forms/checklist.html';
-	        data.FileName =name+timeStamp;
-	        console.log('name: '+data.FileName+ ', folder: '+data.path);
-	        data.xml = text;
-	        data.submit='true';
-	        data.realPath = '';
-	        console.log(text);
-
-		$.ajax({
-	              type: 'POST',
-	              url: url,
-	              data: JSON.stringify(data),
-	              success: function(result) {
-
-	                      var res = result.length;
-	                      if(res === 3){
-	                        //alert('File was saved successfully.');
-							    msg1.success=true;
-								msg1.text = "The Deploy form was sent successfully ";
-	                      }else{
-	                        //alert('File was not saved on our servers, check your study folder name.');
-								msg1.success=false;
-								msg1.text = "There was a problem sending the deploy form";
-	                      }
-	                          
-	                  },
-	              fail: function(jqXHR, textStatus, errorThrown){
-	                  console.log(jqXHR);
-	                  console.log(textStatus);
-	                  console.log(errorThrown);
-
-	                  alert('fail');
-
-	              },
-	              dataType: 'text',
-	              async:false
-	   });
+ 		});
+ 		$('#overwriteClose').on('click',function(){
+ 			$('#ruleModel').modal('hide');
+ 			
+ 		});
  	}else{
- 		msg1.sucess=false;
- 		msg1.text = "Deploy Form Was not Sent because there was a problem saving the rule file. "
+
+
+		if (msg2.success!=false){
+			sendFormToServer(name,text,msg1,url);
+			
+	 	}else{
+	 		msg1.sucess=false;
+	 		msg1.text = "Deploy Form Was not Sent because there was a problem saving the rule file. "
+	 	}
+	 window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
  	}
  
- window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
 
  }
 
+function sendFormToServer(name,text,msg1,url){
+	var timeStamp = Math.round(+new Date()/1000); 
+	var data={};
+        //data.path='/user/'+'bgoldenberg';
+        data.path='/forms/checklistold.html';
+        data.FileName =name+timeStamp;
+        console.log('name: '+data.FileName+ ', folder: '+data.path);
+        data.xml = text;
+        data.submit='true';
+        data.realPath = '';
+        console.log(text);
 
+	$.ajax({
+              type: 'POST',
+              url: url,
+              data: JSON.stringify(data),
+              success: function(result) {
+
+                      var res = result.length;
+                      if(res === 3){
+                        //alert('File was saved successfully.');
+						    msg1.success=true;
+							msg1.text = "The Deploy form was sent successfully ";
+                      }else{
+                        //alert('File was not saved on our servers, check your study folder name.');
+							msg1.success=false;
+							msg1.text = "There was a problem sending the deploy form";
+                      }
+                          
+                  },
+              fail: function(jqXHR, textStatus, errorThrown){
+                  console.log(jqXHR);
+                  console.log(textStatus);
+                  console.log(errorThrown);
+
+                  alert('fail');
+
+              },
+              dataType: 'text',
+              async:false
+   });
+}
 //send rule file 
- function sendToServer(xml,path,name,url,msg2){
+ function sendToServer(xml,path,name,url,msg2,overwrite){
         
         
         var data={};
@@ -369,6 +396,7 @@ function processForm(){
         data.realPath = '';
         console.log('name: '+data.FileName+ ', folder: '+data.path);
         data.xml = xml;
+        data.overwrite = overwrite;
         console.log(xml);
         $.ajax({
               type: 'POST',
@@ -407,37 +435,6 @@ function processForm(){
               dataType: 'text',
               async:false
         });
+ 	
  }
-       //  $.post(this.url,JSON.stringify(data),function(data){
-       //     // alert(data);
-       //      alert('success');
-       // },"html").fail(function ( jqXHR, textStatus, errorThrown){
-       //   console.log(jqXHR);
-       //   console.log(textStatus);
-       //   console.log(errorThrown);
-
-       //  alert('fail');
-
-
-
-
-       // });
-        // promise.fail(function(){
-        //     //$('.alert').alert();
-        //     //$('.alert').show();
-        //     alert('File was not saved on our servers, check your study folder name.');
-        //    // $('#Errormodal').modal('toggle');
-
-        // });
-        // // }).fail( function(xhr, textStatus, errorThrown) {
-        // // alert(xhr.responseText);}
-        // promise.done(function(){
-
-        //     alert('File was saved successfully.');
-
-
-        // });
-        
-
-
-   
+     

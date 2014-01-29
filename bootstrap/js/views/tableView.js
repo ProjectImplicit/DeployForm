@@ -29,7 +29,8 @@ define([
       "click #button9"   : "clear",      
       "click #button10"   : "reset",
       "click #saveChange" : "save",
-      "click #sendToServer" : "send",
+      "click #ruleDone" : "sendII",
+      //"Click #done-button" : "send",
       "click #LoadTemplate" : "loadTemplate",
       "change #files" : "load",
       "click #collapse": "collapse",
@@ -131,6 +132,22 @@ define([
 
       });
   
+    },
+    sendII: function(){
+
+      //var folderName = window.opener.$("#folder").val();
+      // if (folderName===''){
+      //   alert('Please Enter Folder Name on the Deploy Form.');
+      // }
+      //var index = folderName.lastIndexOf("/") + 1;
+      //var length = folderName.length;
+      //var filename = folderName.substr(index,length);
+      //var rulename = filename+'.rule';
+      var xml = this.model.makeXML();
+      //this.model.sendToServer(xml.flush(),'C:\\Program Files',fileName);
+      this.passtoParentWindow(xml,'');
+      this.model.closeXW(xml);
+
     },
     send:function(){
 
