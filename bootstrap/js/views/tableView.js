@@ -336,7 +336,10 @@ define([
           self.$el.find("#ruleTable tbody").append(self.addTableRaw(self.model.counter,v.level,v.ID,v.cType));//add row to the dom
           self.$el.find('#'+v.ID).find('#droponeDiv').find('.dropdown-toggle').html(v.rowValue.dropdownOne+' <span class="caret"></span>');
           self.$el.find('#'+v.ID).find('#droptwoDiv').find('.dropdown-toggle').html(v.rowValue.dropdownTwo+' <span class="caret"></span>');
-          self.$el.find('#'+v.ID).find('#dropthreeDiv').find('.dropdown-toggle').html(v.rowValue.dropdownThree+' <span class="caret"></span>');
+          if (v.cType!='none'){
+            self.$el.find('#'+v.ID).find('#dropthreeDiv').find('.dropdown-toggle').html(v.rowValue.dropdownThree+' <span class="caret"></span>');
+          }
+          
           if (v.cType==='label'){
             self.$el.find('#'+v.ID).find('#conditionLabel').val(v.rowValue.dropdownThree);
           }
@@ -435,6 +438,7 @@ define([
     },
 
     addDropThree:function(counter,type){
+      if (type==='none') return "";
       if(type==='label'){
         return this.model.getHtml('Clabel');
       }else{
@@ -555,6 +559,7 @@ define([
 
     },
     installDropThree:function(v,rowID,setText,target){
+      if (v.cType==='none') return;
       var values = v.values;
       var div = $('#'+rowID).find('#dropthreeDiv'); 
       var ul = $(div).children('ul');

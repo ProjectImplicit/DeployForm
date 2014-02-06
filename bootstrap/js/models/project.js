@@ -813,15 +813,15 @@ cType:'dropdown'},
             data:{represent:'int'},
             cType:'dropdown'
 },
-{
-            cName:'Exclude Previous Study ID',
+{           
+            cName:'Exclude Study Taken in the Last 15 mins',
             cNameXML:'previous_study_id',
-            equal:['Is'],
+            equal:['Yes'],
             equalXML:['eq'],
             values:[],
             valuesXML:[],
             data:{represent:'string'},
-            cType:'label'
+            cType:'none'
 },
 
 {
@@ -1854,14 +1854,23 @@ cType:'dropdown'},
 
 
             }
-            if (row.rowValue.dropdownTwo==='Previous Study ID'){
+            // if (row.rowValue.dropdownTwo==='Previous Study ID'){
+
+            //     row.rowValue.dropdownOne = 'previous_study_id';
+            //     //row.rowValue.dropdownThree = 'i';
+            //     row.rowValue.dropdownTwo = 'eq';
+
+
+            // }
+            if (row.rowValue.dropdownOne==='Exclude Study Taken in the Last 15 mins'){
 
                 row.rowValue.dropdownOne = 'previous_study_id';
-                //row.rowValue.dropdownThree = 'i';
+                row.rowValue.dropdownThree = 'none';
                 row.rowValue.dropdownTwo = 'eq';
 
 
             }
+
 
         }
         if (arg==='r'){
@@ -1898,8 +1907,8 @@ cType:'dropdown'},
             if (row.rowValue.dropdownOne === 'previous_study_id'){
 
                 
-                row.rowValue.dropdownOne = 'Exclude Study';
-                row.rowValue.dropdownTwo = 'Previous Study ID';
+                row.rowValue.dropdownOne = 'Exclude Study Taken in the Last 15 mins';
+                //row.rowValue.dropdownTwo = 'Previous Study ID';
             }
 
         }
@@ -1911,7 +1920,7 @@ cType:'dropdown'},
         var rows = this.TRows;
         for(var i=0;i<rows.length;i++){
 
-            if (rows[i].rowValue.dropdownOne === 'Exclude Study'){
+            if (rows[i].rowValue.dropdownOne === 'Exclude Study' || rows[i].rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
                 this.changeValues(rows[i],'w');
             }
 
@@ -2295,15 +2304,24 @@ cType:'dropdown'},
                     errorMsg="Missing End Tag";
                 }
 
-                if (rowVal.dropdownThree===null || rowVal.dropdownThree===undefined || rowVal.dropdownThree ==='' || rowVal.dropdownThree==='Value'){
-                    conditionError=true;
-                    errorMsg="Missing End Tag";
+                if (row.cType!='none'){
+                    if (rowVal.dropdownThree===null || rowVal.dropdownThree===undefined || rowVal.dropdownThree ==='' || rowVal.dropdownThree==='Value'){
+                        conditionError=true;
+                        errorMsg="Missing End Tag";
+                    }
+
                 }
+                if (row.cType==='label'){
+                    if (! /^[a-zA-Z0-9.]+$/.test(rowVal.dropdownThree)){
+                        conditionError=true;
+                        errorMsg="Study ID has invalid characters";
 
+                    }
+
+                }
+             
             }
-            
-
-
+      
         }
 
         callback(errorMsg,conditionError);
@@ -2652,13 +2670,19 @@ cType:'dropdown'},
             v.rowValue.dropdownOne = value;
             v.rowValue.dropdownTwo = 'Expression';
             v.rowValue.dropdownThree = 'Value';
-            if (value==='Postal Code'||value==='Exclude Study'||value==='Exclude Previous Study ID'){
+            if (value==='Exclude Study Taken in the Last 15 mins'){
+                v.cType = 'none';
+            }else{
+                if (value==='Postal Code'||value==='Exclude Study'){
                 v.cType = 'label';
                 v.rowValue.dropdownThree = '';
-            }else{
-                v.cType = 'dropdown';
-                v.rowValue.dropdownThree = 'Value';
+                }else{
+                    v.cType = 'dropdown';
+                    v.rowValue.dropdownThree = 'Value';
+                }
+
             }
+            
 
           } 
         })

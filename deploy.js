@@ -302,7 +302,7 @@ function processForm(){
 	var index = path.lastIndexOf("/") + 1;
     var length = path.length;
     var filename = path.substr(index,length);
-    var ruleName = filename+'.rule';
+    var ruleName = filename+'.rules';
     $('#rulename').val(ruleName);
 	var text = getFile();
 	if (xml!='parent'){
@@ -330,12 +330,18 @@ function processForm(){
 
 		if (msg2.success!=false){
 			sendFormToServer(name,text,msg1,url);
+			window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
 			
 	 	}else{
-	 		msg1.sucess=false;
-	 		msg1.text = "Deploy Form Was not Sent because there was a problem saving the rule file. "
+	 		$('#folderModel').modal('show');
+	 		$('#OkClose').on('click',function(){
+ 				$('#folderModel').modal('hide');
+ 			
+ 			});
+	 		//msg1.sucess=false;
+	 		//msg1.text = "Deploy Form Was not Sent because there was a problem saving the rule file. "
 	 	}
-	 window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
+	 
  	}
  
 
@@ -416,7 +422,7 @@ function sendFormToServer(name,text,msg1,url){
                       	}else{
                       		msg2.success =false;
                       		//alert('File was not saved on our servers, check your study folder name.');
-                        	msg2.text = 'File was not saved on our servers, check your study folder name.';
+                        	msg2.text = 'Study Folder was not Found, check your study folder name.';
 
 
                       	}
