@@ -1904,11 +1904,14 @@ cType:'dropdown'},
                 row.rowValue.dropdownOne = 'Exclude Study';
                 row.rowValue.dropdownTwo = 'Started Studies';
             }
-            if (row.rowValue.dropdownOne === 'previous_study_id'){
+            if (row.rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
 
                 
-                row.rowValue.dropdownOne = 'Exclude Study Taken in the Last 15 mins';
-                //row.rowValue.dropdownTwo = 'Previous Study ID';
+                //row.rowValue.dropdownOne = 'Exclude Study Taken in the Last 15 mins';
+                row.cType='none';
+                row.rowValue.dropdownTwo = 'Yes';
+                row.rowValue.dropdownThree =  undefined;
+
             }
 
         }
@@ -1931,7 +1934,7 @@ cType:'dropdown'},
     isStudy:function(row){
 
         if (row.rowValue.dropdownThree==='c' || row.rowValue.dropdownThree==='i') return true;
-        if (row.rowValue.dropdownOne==='started_studies' || row.rowValue.dropdownOne==='previous_study_id') return true;
+        if (row.rowValue.dropdownOne==='started_studies' || row.rowValue.dropdownOne==='Exclude Study Taken in the Last 15 mins') return true;
         return false;
 
     },
@@ -1950,7 +1953,11 @@ cType:'dropdown'},
 
             if (this.isStudy(rows[i])){
                 this.changeValues(rows[i],'r');
-                rows[i].cType='label';
+                if (rows[i].rowValue.dropdownOne!='Exclude Study Taken in the Last 15 mins'){
+                    rows[i].cType='label';
+
+                }
+                
             }
             if(this.isZip(rows[i])){
                 rows[i].cType='label';
