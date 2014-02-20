@@ -417,16 +417,28 @@ define([
     },
     addDropOne:function(counter){
         console.log('starting add drop one');
+        var conditionsArray = new Array();
+       _.each(this.model.conditions,function(v,i){
+             var cName = v.cName;
+             conditionsArray.push(cName);
+             
+       });
+       conditionsArray.sort(); 
+       conditionsArray.reverse();
        var drop = ''+
        '<div id="droponeDiv" class="btn-group">'+ 
          '<button id ="dropone" class="btn dropdown-toggle btn-mini" data-toggle="dropdown" href="#">'+
              'Condition <span class="caret"></span>'+ 
            '</button>'+ 
            '<ul class="dropdown dropdown-menu">';
-            _.each(this.model.conditions,function(v,i){
-             var cName = v.cName;
-             drop =drop + '<li id="li1"><a>'+cName+'</a></li>';
-           });
+           //  _.each(this.model.conditions,function(v,i){
+           //   var cName = v.cName;
+           //   drop =drop + '<li id="li1"><a>'+cName+'</a></li>';
+           // });
+            var size =conditionsArray.length;
+            for (var index=0;index<size;index++){
+              drop =drop + '<li id="li1"><a>'+conditionsArray.pop()+'</a></li>';
+            }
             drop = drop+'</ul>'+
        '</div>';
      return drop;

@@ -793,10 +793,30 @@ cType:'dropdown'
    'zw'
 ],  
 cType:'dropdown'},
+// {
+//             cName:'Exclude Study',
+//             cNameXML:'study',
+//             equal:['Completed','Started but not Completed'],
+//             equalXML:[],
+//             values:[],
+//             valuesXML:[],
+//             data:{represent:'string'},
+//             cType:'label'
+// },
 {
-            cName:'Exclude Study',
+            cName:'Did not Start Study',
             cNameXML:'study',
-            equal:['Completed','Started but not Completed'],
+            equal:['Study id is'],
+            equalXML:[],
+            values:[],
+            valuesXML:[],
+            data:{represent:'string'},
+            cType:'label'
+},
+{
+            cName:'Did not complete study',
+            cNameXML:'study',
+            equal:['Study id is'],
             equalXML:[],
             values:[],
             valuesXML:[],
@@ -806,8 +826,8 @@ cType:'dropdown'},
 {
             cName:'Number of Studies Started',
             cNameXML:'started_studies',
-            equal:['='],
-            equalXML:['eq'],
+            equal:['>','<','=','>=','<='],
+            equalXML:['gt','lt','eq','gte','lte',],
             values:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
             valuesXML:[],
             data:{represent:'int'},
@@ -1831,14 +1851,14 @@ cType:'dropdown'},
 
 
             // }
-            if (row.rowValue.dropdownTwo==='Started but not Completed'){
+            if (row.rowValue.dropdownOne === 'Did not Start Study'){
 
                 row.rowValue.dropdownOne = row.rowValue.dropdownThree;
                 row.rowValue.dropdownThree = 'i';
                 row.rowValue.dropdownTwo = 'neq';
 
             }
-            if (row.rowValue.dropdownTwo==='Completed'){
+            if (row.rowValue.dropdownOne === 'Did not complete study'){
 
                 row.rowValue.dropdownOne = row.rowValue.dropdownThree;
                 row.rowValue.dropdownThree = 'c';
@@ -1890,14 +1910,14 @@ cType:'dropdown'},
             if (row.rowValue.dropdownThree === 'i' && row.rowValue.dropdownTwo === 'neq'){
 
                 row.rowValue.dropdownThree = row.rowValue.dropdownOne;
-                row.rowValue.dropdownOne = 'Exclude Study';
-                row.rowValue.dropdownTwo = 'Started but not Completed';
+                row.rowValue.dropdownOne = 'Did not Start Study';
+                row.rowValue.dropdownTwo = 'Study id is';
             }
             if (row.rowValue.dropdownThree === 'c' && row.rowValue.dropdownTwo === 'neq'){
 
                 row.rowValue.dropdownThree = row.rowValue.dropdownOne;
-                row.rowValue.dropdownOne = 'Exclude Study';
-                row.rowValue.dropdownTwo = 'Completed';
+                row.rowValue.dropdownOne = 'Did not complete study';
+                row.rowValue.dropdownTwo = 'Study id is';
             }
             if (row.rowValue.dropdownOne === 'started_studies'){
 
@@ -1923,7 +1943,7 @@ cType:'dropdown'},
         var rows = this.TRows;
         for(var i=0;i<rows.length;i++){
 
-            if (rows[i].rowValue.dropdownOne === 'Exclude Study' || rows[i].rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
+            if (rows[i].rowValue.dropdownOne === 'Did not complete study' || rows[i].rowValue.dropdownOne === 'Did not Start Study' || rows[i].rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
                 this.changeValues(rows[i],'w');
             }
 
@@ -2680,7 +2700,7 @@ cType:'dropdown'},
             if (value==='Exclude Study Taken in the Last 15 mins'){
                 v.cType = 'none';
             }else{
-                if (value==='Postal Code'||value==='Exclude Study'){
+                if (value==='Postal Code'||value==='Did not Start Study' || value==='Did not complete study'){
                 v.cType = 'label';
                 v.rowValue.dropdownThree = '';
                 }else{
