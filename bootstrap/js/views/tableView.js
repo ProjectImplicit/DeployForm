@@ -332,10 +332,12 @@ define([
       _.each(this.model.TRows,function(v,i){
         if (v.typeR=='C'){
           
-          
+          //add the drop downs load them without setting them according to the model
           self.$el.find("#ruleTable tbody").append(self.addTableRaw(self.model.counter,v.level,v.ID,v.cType));//add row to the dom
           self.$el.find('#'+v.ID).find('#droponeDiv').find('.dropdown-toggle').html(v.rowValue.dropdownOne+' <span class="caret"></span>');
-          self.$el.find('#'+v.ID).find('#droptwoDiv').find('.dropdown-toggle').html(v.rowValue.dropdownTwo+' <span class="caret"></span>');
+          if (v.cType!='none'){
+             self.$el.find('#'+v.ID).find('#droptwoDiv').find('.dropdown-toggle').html(v.rowValue.dropdownTwo+' <span class="caret"></span>');
+          }
           if (v.cType!='none'){
             self.$el.find('#'+v.ID).find('#dropthreeDiv').find('.dropdown-toggle').html(v.rowValue.dropdownThree+' <span class="caret"></span>');
           }
@@ -386,7 +388,7 @@ define([
 
         }
         var raw = ''+
-        '<tr id="'+id+'" class="clickableRow" ><td style="'+this.addPadding(level)+';">'+this.addDropOne(counter)+this.addDropTwo(counter)+this.addDropThree(counter,type)+this.addButtons()+'</td></tr>';
+        '<tr id="'+id+'" class="clickableRow" ><td style="'+this.addPadding(level)+';">'+this.addDropOne(counter)+this.addDropTwo(counter,type)+this.addDropThree(counter,type)+this.addButtons()+'</td></tr>';
         console.log(raw);
         return raw;
 
@@ -445,7 +447,8 @@ define([
 
     },
 
-    addDropTwo:function(counter){
+    addDropTwo:function(counter,type){
+        if (type=='none') return "";
         return this.model.getHtml('DropTwo');
     },
 
@@ -543,7 +546,6 @@ define([
       condition = setText;
       var thisContex = this; 
    
-
       console.log('condition'+condition);
       _.each(this.model.conditions,function(v,i){
 

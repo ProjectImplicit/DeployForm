@@ -41,7 +41,7 @@ function getFile(){
 	var day     = date.getDate();
 	var hour    = date.getHours();
 	var minute  = date.getMinutes();
-	var timestamp  = month+ "/"+day+"/"+year+", "+hour+":"+minute+':'+minute;
+	var timestamp  = month+ "/"+day+"/"+year+", "+hour+":"+minute;
 	
 	//'<tr><td>8/19/2011 16:23:30</td><td>colintest</td><td>cts2e@virginia.edu</td><td>colin</td><td>1</td><td>non</td><td>yes</td><td>yes</td><td>yes</td><td>yes</td><td></td><td></td><td></td></tr>'
 	var filedata = '<tr><td>'+timestamp+'</td><td>'+value('folder')+'</td><td>'+value('researchEmail')+'</td><td>'+value('researchName')+'</td><td>'+
@@ -302,8 +302,18 @@ function processForm(){
 	var index = path.lastIndexOf("/") + 1;
     var length = path.length;
     var filename = path.substr(index,length);
+    if (filename=='') {
+    	var folders = path.split("/");
+    	var size = folders.length;
+    	filename = folders[size-2];
+    }
     var ruleName = filename+'.rules';
-    $('#rulename').val(ruleName);
+    if (xml!='parent'){
+    	$('#rulename').val(ruleName);
+    }else{
+    	$('#rulename').val('None');
+    }
+    
 	var text = getFile();
 	if (xml!='parent'){
 		sendToServer(xml,path,ruleName,url,msg2,'false');

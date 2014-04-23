@@ -806,7 +806,7 @@ cType:'dropdown'},
 {
             cName:'Did not Start Study',
             cNameXML:'study',
-            equal:['Study id is'],
+            equal:['Study ID is'],
             equalXML:[],
             values:[],
             valuesXML:[],
@@ -814,9 +814,9 @@ cType:'dropdown'},
             cType:'label'
 },
 {
-            cName:'Did not complete study',
+            cName:'Started but Did not Complete Study',
             cNameXML:'study',
-            equal:['Study id is'],
+            equal:['Study ID is'],
             equalXML:[],
             values:[],
             valuesXML:[],
@@ -834,10 +834,10 @@ cType:'dropdown'},
             cType:'dropdown'
 },
 {           
-            cName:'Exclude Study Taken in the Last 15 mins',
+            cName:'Did not Take a Study in the Last 15min',
             cNameXML:'previous_study_id',
-            equal:['Yes'],
-            equalXML:['eq'],
+            equal:[],
+            equalXML:[],
             values:[],
             valuesXML:[],
             data:{represent:'string'},
@@ -1812,11 +1812,12 @@ cType:'dropdown'},
     },
     clearModel:function(){
          this.TRows = [
-         {ID:'rowB0l0',typeR:'B',level:0,rowValue:{booleanValue:''}}
+         {ID:'rowB0l0',typeR:'B',level:0,rowValue:{booleanValue:'All'},cType:'dropdown'},
+         {ID:'rowEB1l0',typeR:'EB',level:0,rowValue:{booleanValue:'End All'},cType:'dropdown'}
 
          ];
          this.level=0;
-         this.counter=1;
+         this.counter=2;
     },
     loadDefaultModel:function(){
         this.TRows = [
@@ -1858,7 +1859,7 @@ cType:'dropdown'},
                 row.rowValue.dropdownTwo = 'neq';
 
             }
-            if (row.rowValue.dropdownOne === 'Did not complete study'){
+            if (row.rowValue.dropdownOne === 'Started but Did not Complete Study'){
 
                 row.rowValue.dropdownOne = row.rowValue.dropdownThree;
                 row.rowValue.dropdownThree = 'c';
@@ -1882,7 +1883,7 @@ cType:'dropdown'},
 
 
             // }
-            if (row.rowValue.dropdownOne==='Exclude Study Taken in the Last 15 mins'){
+            if (row.rowValue.dropdownOne==='Did not Take a Study in the Last 15min'){
 
                 row.rowValue.dropdownOne = 'previous_study_id';
                 row.rowValue.dropdownThree = 'none';
@@ -1916,7 +1917,7 @@ cType:'dropdown'},
             if (row.rowValue.dropdownThree === 'c' && row.rowValue.dropdownTwo === 'neq'){
 
                 row.rowValue.dropdownThree = row.rowValue.dropdownOne;
-                row.rowValue.dropdownOne = 'Did not complete study';
+                row.rowValue.dropdownOne = 'Started but Did not Complete Study';
                 row.rowValue.dropdownTwo = 'Study id is';
             }
             if (row.rowValue.dropdownOne === 'started_studies'){
@@ -1924,12 +1925,12 @@ cType:'dropdown'},
                 row.rowValue.dropdownOne = 'Exclude Study';
                 row.rowValue.dropdownTwo = 'Started Studies';
             }
-            if (row.rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
+            if (row.rowValue.dropdownOne === 'Did not Take a Study in the Last 15min'){
 
                 
                 //row.rowValue.dropdownOne = 'Exclude Study Taken in the Last 15 mins';
                 row.cType='none';
-                row.rowValue.dropdownTwo = 'Yes';
+                row.rowValue.dropdownTwo = '';
                 row.rowValue.dropdownThree =  undefined;
 
             }
@@ -1943,7 +1944,7 @@ cType:'dropdown'},
         var rows = this.TRows;
         for(var i=0;i<rows.length;i++){
 
-            if (rows[i].rowValue.dropdownOne === 'Did not complete study' || rows[i].rowValue.dropdownOne === 'Did not Start Study' || rows[i].rowValue.dropdownOne === 'Exclude Study Taken in the Last 15 mins'){
+            if (rows[i].rowValue.dropdownOne === 'Started but Did not Complete Study' || rows[i].rowValue.dropdownOne === 'Did not Start Study' || rows[i].rowValue.dropdownOne === 'Did not Take a Study in the Last 15min'){
                 this.changeValues(rows[i],'w');
             }
 
@@ -1954,7 +1955,7 @@ cType:'dropdown'},
     isStudy:function(row){
 
         if (row.rowValue.dropdownThree==='c' || row.rowValue.dropdownThree==='i') return true;
-        if (row.rowValue.dropdownOne==='started_studies' || row.rowValue.dropdownOne==='Exclude Study Taken in the Last 15 mins') return true;
+        if (row.rowValue.dropdownOne==='started_studies' || row.rowValue.dropdownOne==='Did not Take a Study in the Last 15min') return true;
         return false;
 
     },
@@ -1973,7 +1974,7 @@ cType:'dropdown'},
 
             if (this.isStudy(rows[i])){
                 this.changeValues(rows[i],'r');
-                if (rows[i].rowValue.dropdownOne!='Exclude Study Taken in the Last 15 mins'){
+                if (rows[i].rowValue.dropdownOne!='Did not Take a Study in the Last 15min'){
                     rows[i].cType='label';
 
                 }
@@ -2326,9 +2327,11 @@ cType:'dropdown'},
                     errorMsg="Missing End Tag";
 
                 }
-                if (rowVal.dropdownTwo===null || rowVal.dropdownTwo===undefined || rowVal.dropdownTwo ==='' || rowVal.dropdownTwo==='Expression'){
-                    conditionError=true;
-                    errorMsg="Missing End Tag";
+                if (row.cType!='none'){
+                    if (rowVal.dropdownTwo===null || rowVal.dropdownTwo===undefined || rowVal.dropdownTwo ==='' || rowVal.dropdownTwo==='Expression'){
+                        conditionError=true;
+                        errorMsg="Missing End Tag";
+                    }
                 }
 
                 if (row.cType!='none'){
@@ -2485,7 +2488,7 @@ cType:'dropdown'},
        
             var childNodes=node.childNodes;
             var firstChild= node.firstChild;
-            console.log(firstChild.nodeName)
+            //console.log(firstChild.nodeName)
             for (var i=0;i<childNodes.length;i++)
             {
                 if (firstChild.nodeType==1)
@@ -2697,10 +2700,10 @@ cType:'dropdown'},
             v.rowValue.dropdownOne = value;
             v.rowValue.dropdownTwo = 'Expression';
             v.rowValue.dropdownThree = 'Value';
-            if (value==='Exclude Study Taken in the Last 15 mins'){
+            if (value==='Did not Take a Study in the Last 15min'){
                 v.cType = 'none';
             }else{
-                if (value==='Postal Code'||value==='Did not Start Study' || value==='Did not complete study'){
+                if (value==='Postal Code'||value==='Did not Start Study' || value==='Started but Did not Complete Study'){
                 v.cType = 'label';
                 v.rowValue.dropdownThree = '';
                 }else{
