@@ -803,25 +803,35 @@ cType:'dropdown'},
 //             data:{represent:'string'},
 //             cType:'label'
 // },
+// {
+//             cName:'Did not Start Study',
+//             cNameXML:'study',
+//             equal:['Study ID is'],
+//             equalXML:[],
+//             values:[],
+//             valuesXML:[],
+//             data:{represent:'string'},
+//             cType:'label'
+// },
+// {
+//             cName:'Started but Did not Complete Study',
+//             cNameXML:'study',
+//             equal:['Study ID is'],
+//             equalXML:[],
+//             values:[],
+//             valuesXML:[],
+//             data:{represent:'string'},
+//             cType:'label'
+// },
 {
-            cName:'Did not Start Study',
-            cNameXML:'study',
-            equal:['Study ID is'],
-            equalXML:[],
-            values:[],
-            valuesXML:[],
-            data:{represent:'string'},
-            cType:'label'
-},
-{
-            cName:'Started but Did not Complete Study',
-            cNameXML:'study',
-            equal:['Study ID is'],
-            equalXML:[],
-            values:[],
-            valuesXML:[],
-            data:{represent:'string'},
-            cType:'label'
+             cName:'Did not Start or Complete Study',
+             cNameXML:'study',
+             equal:['Study ID is'],
+             equalXML:[],
+             values:[],
+             valuesXML:[],
+             data:{represent:'string'},
+             cType:'label'
 },
 {
             cName:'Number of Studies Started',
@@ -1852,6 +1862,7 @@ cType:'dropdown'},
 
 
             // }
+
             if (row.rowValue.dropdownOne === 'Did not Start Study'){
 
                 row.rowValue.dropdownOne = row.rowValue.dropdownThree;
@@ -1943,10 +1954,22 @@ cType:'dropdown'},
 
         var rows = this.TRows;
         for(var i=0;i<rows.length;i++){
-
-            if (rows[i].rowValue.dropdownOne === 'Started but Did not Complete Study' || rows[i].rowValue.dropdownOne === 'Did not Start Study' || rows[i].rowValue.dropdownOne === 'Did not Take a Study in the Last 15min'){
-                this.changeValues(rows[i],'w');
+            if (rows[i].rowValue.dropdownOne === 'Did not Start or Complete Study'){
+                rows[i].rowValue.dropdownOne = 'Did not Start Study';
+                var row ={};
+                row.ID=rows[i].ID+'II';
+                row.typeR='C';
+                row.level=rows[i].level;
+                row.rowValue={};
+                row.rowValue.dropdownOne = 'Started but Did not Complete Study';
+                row.rowValue.dropdownTwo = 'Study id is';
+                row.rowValue.dropdownThree = rows[i].rowValue.dropdownThree;
+                row.cType = rows[i].cType;
+                rows.splice(i+1, 0, row);
             }
+            //if (rows[i].rowValue.dropdownOne === 'Started but Did not Complete Study' || rows[i].rowValue.dropdownOne === 'Did not Start Study' || rows[i].rowValue.dropdownOne === 'Did not Take a Study in the Last 15min'){
+            this.changeValues(rows[i],'w');
+            //}
 
 
         }
@@ -1982,6 +2005,22 @@ cType:'dropdown'},
             }
             if(this.isZip(rows[i])){
                 rows[i].cType='label';
+            }
+
+        }
+        for(var i=0;i<rows.length;i++){
+            
+            if (rows[i].rowValue.dropdownOne=='Did not Start Study' || rows[i].rowValue.dropdownOne=='Started but Did not Complete Study'){
+                if (rows[i+1].rowValue.dropdownOne=='Did not Start Study' || rows[i+1].rowValue.dropdownOne=='Started but Did not Complete Study'){
+                    if (rows[i].rowValue.dropdownThree===rows[i+1].rowValue.dropdownThree){
+                        rows[i].rowValue.dropdownOne='Did not Start or Complete Study';
+                        rows.splice(i+1,1);
+                    }
+                }else{
+                    alert('Rules Study Condition is not Well Formed.');
+                    rows[i].rowValue.dropdownOne='Did not Start or Complete Study';
+                    
+                }
             }
 
         }
@@ -2703,7 +2742,7 @@ cType:'dropdown'},
             if (value==='Did not Take a Study in the Last 15min'){
                 v.cType = 'none';
             }else{
-                if (value==='Postal Code'||value==='Did not Start Study' || value==='Started but Did not Complete Study'){
+                if (value==='Postal Code'||value==='Did not Start Study' || value==='Started but Did not Complete Study' || value==='Did not Start or Complete Study'){
                 v.cType = 'label';
                 v.rowValue.dropdownThree = '';
                 }else{
@@ -2766,43 +2805,3 @@ cType:'dropdown'},
 
 
 
-
-
-/*
-
-
- 'AF','AL','DZ','AS','AD','AO','AI','AQ','AG','AR','AM','AW','AU','AT','AZ',
-    'BS','BH','BD','BB','BY','BE','BZ','BJ','BM','BT','BO','BA','BW','BV','BR','IO','BN','BG','BF','BI','KH',
-    'CM','CA','CV','KY','CF','TD','CL','CN','CX','CC','CO','KM','CG','CD','CK','CR','CI','HR','CU','CY','CZ',
-    'DK','DJ','DM','DO','TP','EC','EG','SV','GQ','ER','EE','ET','FK','FO','FJ','FI','FR','GF','PF','TF',
-    'GA','GM','GE','DE','GH','GI','GR','GL','GD','GP','GU','GT','GN','GW','GY',
-    'HT','HM','HN','HK','HU','IS','IN','ID','IR','IQ','IE','IL','IT','JM','JP','JO','KZ','KE','KI','KR','KP','KW','KG',
-    'LA','LV','LB','LS','LR','LY','LI','LT','LU','MO','MK','MG','MW','MY','MV','ML','MT','MH','MQ','MR','MU',
-    'YT','MX','FM','MD','MC','MN','MS','MA','MZ','MM','NA','NR','NP','AN','NL','NC','NZ','NI','NE','NG','NU','NF','MP','NO','OM',
-    'PK','PW','A','PG','PY','PE','PH','PN','PL','PT','PR','QA','RE','RO','RU','RW','SH','KN','LC','PM','VC','WS',
-    'SM','ST','SA','SN','SC','SC','SL','SG','SK','SI','SB','SO','ZA','GS','ES','LK','SD','SR','SJ','SZ','SE','CH','SY',
-    'TW','TJ','TZ','TH','TG','TK','TO','TT','TN','TR','TM','TC','TV','UG','UA','AE','UK','US','UM','UY','UZ',
-    'VU','VA','VE','VN','VG','VI','WF','YE','YU','ZM','ZW'
-    {
-            cName:'Household Income',
-            cNameXML:'household income',
-            equal:['>','<','=','=>','=<','!='],
-            equalXML:['gt','lt','eq','gte','lte','neq'],
-            values:['25,000 (U.S. $)','25,000 - 49,999','50,000 - 74,999','75,000 - 149,999','> 150,000','99 = Dont know'],
-            valuesXML:['1','2','3','4','5','99'],
-            data:{represent:'string'},
-            cType:'dropdown'
-        },
-
-        {
-            cName:'English fluency',
-            cNameXML:'english fluency',
-            equal:['>','<','=','=>','=<','!='],
-            equalXML:['gt','lt','eq','gte','lte','neq'],
-            values:['English is my primary language','English fluent - speak/read it regularly','English fluent - speak/read infrequently','English knowledgable','not fluent'],
-            valuesXML:['4','3','2','1','0'],
-            data:{represent:'string'},
-            cType:'dropdown'
-        },
-
-*/

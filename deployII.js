@@ -2,6 +2,10 @@
 
 $(document).ready(function(){
 
+
+
+	
+
 	var folderValue='';
 
 	if ($('#restrictionshide').val()!='parent'){
@@ -349,9 +353,9 @@ function processForm(){
 
 
     //var url="/implicit/rules";//on implicit
-    var url="/implicit/rules";//for local
-    var msgurl = "/ruleGenerator/msg.html";//for local
-    //var msgurl = "/implicit/research/ruleGenerator/msg.html";//on implicit
+    var url="/implicit/rulesoldev2";//for local
+    //var msgurl = "/ruleGenerator/msg.html";//for local
+    var msgurl = "/implicit/research/ruleGenerator/msg.html";//on implicit
 	
 	var xml = $('#hide' ).val();
 	var name = $('#researchName').val();
@@ -374,14 +378,16 @@ function processForm(){
     
 	var text = getFile();
 	if (xml!='parent'){
-		sendToServer(xml,path,ruleName,url,msg2,'false');
+		posttoOldDev2(xml,path,ruleName,url,msg2,'false');
+		//sendToServer(xml,path,ruleName,url,msg2,'false');
 	}
 	if (msg2.success===false && msg2.text==='File was not saved, a file with this name already exist on the server.'){
  		$('#ruleModel').modal('show');
  		$('#overwriteB').on('click',function(){
  			//alert('click');
  			$('#ruleModel').modal('hide');
- 			sendToServer(xml,path,ruleName,url,msg2,'true');
+ 			posttoOldDev2(xml,path,ruleName,url,msg2,'true');
+ 			//sendToServer(xml,path,ruleName,url,msg2,'true');
  			if (msg2.success!=false){
  				sendFormToServer(name,text,msg1,url);
  				window.location.assign(msgurl+'?success1='+msg1.success+'&msg1='+msg1.text+'&success2='+msg2.success+'&msg2='+msg2.text);
@@ -458,13 +464,58 @@ function sendFormToServer(name,text,msg1,url){
               async:false
    });
 }
-//send rule file 
+function posttoOldDev2(xml,path,name,url,msg2,overwrite){
+		var data={};
+		data.cmd ='post_to_old_dev2';
+        data.path='/user/'+path;
+        data.FileName =name;
+        data.submit='false';
+        data.realPath = '';
+        console.log('name: '+data.FileName+ ', folder: '+data.path);
+        data.xml = xml;
+        data.overwrite = overwrite;
+        console.log(xml);
+        $.ajax({
+              type: 'POST',
+              url: url,
+              data: JSON.stringify(data),
+              success: function(result) {
+          		  var res = takespaces(result);	
+                  
+                  if(res === '1'){
+                    msg2.success=true;
+                    msg2.text = "File was saved successfully, on: "+path+'/'+name;
+                  }else{
+                  	if (res=== '21'){
+                  		msg2.success=false;
+                  		msg2.text = "File was not saved, a file with this name already exist on the server.";
+                  	}else{
+                  		msg2.success =false;
+                  		msg2.text = 'Study Folder was not Found, check your study folder name.';
+
+
+                  	}
+                    
+                  }
+                          
+              },
+              fail: function(jqXHR, textStatus, errorThrown){
+                  console.log(jqXHR);
+                  console.log(textStatus);
+                  console.log(errorThrown);
+
+                  alert('fail');
+
+              },
+              dataType: 'text',
+              async:false
+        });
+
+}
  function sendToServer(xml,path,name,url,msg2,overwrite){
         
         
         var data={};
-        //var path = this.params.folder;
-        
         data.path='/user/'+path;
         data.FileName =name;
         data.submit='false';
