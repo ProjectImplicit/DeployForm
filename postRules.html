@@ -1,0 +1,26 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="sendtoServer.js"></script>
+	<script>
+	 $(window).on("message", function( event ){
+	        // We must check event.origin, because anyone can
+	        // trigger event. Unless, you are public data provider.
+	        //if (event.origin !== "http://example.com") return;
+	        console.log('got messgae');
+	        // var data = event.data;
+	        // var xml = data.xml;
+	        // var path = data.path;
+	        // var name = data.name;
+	        // var msg2 = data.msg2;
+	        // var overwrite = data.overwrite;
+	        // sendToServer(xml,path,name,url,msg2,overwrite)
+
+	        // Now let's send the (1) window data
+	        event.source.postMessage({msg2: msg2}, '*');
+	      });
+	</scipt>
+</head>
+<body>
+</body>
+</html>
