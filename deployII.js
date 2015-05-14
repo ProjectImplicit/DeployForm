@@ -202,6 +202,7 @@ function validate(){
 	$('#studyComplete_error').css("visibility","hidden");
 	$('#necessary_error').css("visibility","hidden");
 	$('#Virtual_error').css("visibility","hidden");
+	$('#realstart_error').css("visibility","hidden");
 
  
 
@@ -267,6 +268,13 @@ if (!($('#Virtual').attr('checked'))){
 	$('#Virtual_error').css("visibility","visible");
 
 }
+if (!($('#realstart').attr('checked'))){
+
+	notfilled  = "Name of experiment file is not filled";
+	mistake=true;
+	$('#realstart_error').css("visibility","visible");
+
+}
 
 
 
@@ -288,6 +296,7 @@ if (!($('#confirmationYes').attr('checked'))){
 	}
 
 }
+
 
 return mistake;
 
