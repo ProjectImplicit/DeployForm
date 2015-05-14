@@ -1,12 +1,10 @@
-// Filename: bootstrap\js\views/tableView
+
 console.log('loading view');
 define([
   'jquery',
   'underscore',
   'backbone',
   'models/project',
-   // Using the Require.js text! plugin, we are loaded raw text
-  // which will be used as our views primary template
   'text!templates/list.html',
   'bootstrap',
   'jasny-bootstrap.min'
@@ -56,8 +54,6 @@ define([
     
        console.log('start init view');
        var compiledTemplate = _.template( projectListTemplate, { } );
-       //_.bindAll(this,'render');
-
        this.model = new ProjectModel();
        this.chosenID ='0';
        //this.counter = this.model.counter;
